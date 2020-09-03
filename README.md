@@ -1,7 +1,15 @@
 # University Ranking Tracker
 A notebook for scraping ranking data from QS, ARWU and TIMES world university and subject rankings.
 <br>
-**Author:** [Elliott Zhu](https://scholar.google.com/citations?user=Cw5v2f4AAAAJ&hl=en)
+**Author:** [Elliott J Zhu](https://scholar.google.com/citations?user=Cw5v2f4AAAAJ&hl=en)
+
+[![Project Status: Active – The project has reached a stable, usable
+state and is being actively
+developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
+[![MIT
+license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4013120.svg)](https://zenodo.org/badge/latestdoi/292465568)
+
 
 ## Introduction
 
@@ -34,7 +42,7 @@ After using code snippets in this notebook, please cite the following:
 
 ## License
 
-© 2017-2020 [Elliott Zhu](https://scholar.google.com/citations?user=Cw5v2f4AAAAJ&hl=en)
+© 2017-2020 [Elliott J Zhu](https://scholar.google.com/citations?user=Cw5v2f4AAAAJ&hl=en)
 
 The contents of this repository are distributed under the MIT license.
 See below for details:
