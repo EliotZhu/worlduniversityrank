@@ -679,8 +679,6 @@ display(df_TIMES.head(5))
 
 
 ```python
-print('\n === Times Higher Education Law ===')
-
 years = [2020]
 ranks = ['Subject.Law']
 df_TIMES = TIMES_rank(years, ranks)
@@ -689,27 +687,11 @@ display(df_TIMES.head(5))
 ```
 
     100%|██████████| 1/1 [00:00<00:00,  2.41it/s]
-
-
     
-     === Times Higher Education Law ===
-
+    === Times Higher Education Law ===
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -865,12 +847,9 @@ Please refer to the [methodology](http://www.shanghairanking.com/ARWU-Methodolog
 
 ```python
 df_ARWU, df_ARWU_subject = ARWU_rank(years=[2020])
-print('\n === ARWU ===')
 ```
 
-      0%|          | 0/1 [00:00<?, ?it/s]/Users/jiezhu/.virtualenvs/globalenv/lib/python3.7/site-packages/ipykernel_launcher.py:68: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
+
     See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
     100%|██████████| 1/1 [00:04<00:00,  4.88s/it]
     100%|██████████| 2/2 [00:10<00:00,  5.26s/it]
@@ -878,19 +857,6 @@ print('\n === ARWU ===')
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1122,19 +1088,6 @@ print('\n === ARWU ===')
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1354,32 +1307,11 @@ print('\n === ARWU ===')
 
 
 
-```python
-print('\n === ARWU Subject Rankings ===')
-
-display(df_ARWU_subject.head(5))
-
-```
-
-    
-     === ARWU Subject Rankings ===
+=== ARWU Subject Rankings ===
 
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1524,25 +1456,9 @@ display(df_QS[df_QS.Subject== 'world-university-rankings'].head(5))
 display(df_QS[df_QS.Subject== 'classics-ancient-history'].head(5))
 ```
 
-    
-     === QS World and Subject Rankings ===
-
-
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
