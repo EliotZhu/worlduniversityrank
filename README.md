@@ -52,14 +52,14 @@ After using the `survtmle` R package, please cite both of the following:
 
 ## License
 
-© 2016-2019 [David C. Benkeser](http://www.benkeserstatistics.com)
+© 2017-2020 [Elliott Zhu](https://scholar.google.com/citations?user=Cw5v2f4AAAAJ&hl=en)
 
 The contents of this repository are distributed under the MIT license.
 See below for details:
 
     The MIT License (MIT)
     
-    Copyright (c) 2016-2019 David C. Benkeser
+    Copyright (c) 2017-2020 Elliott Jie Zhu
     
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
