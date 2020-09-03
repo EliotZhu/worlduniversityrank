@@ -1,7 +1,7 @@
 # University Ranking Tracker
 A notebook for scraping ranking data from QS, ARWU and TIMES world university and subject rankings.
 <br>
-**Author: Elliott Zhu**
+**Author:** [Elliott Zhu](https://scholar.google.com/citations?user=Cw5v2f4AAAAJ&hl=en)
 
 ## Introduction
 
@@ -11,77 +11,80 @@ systems: Times Higher Education, ARWU and QS. It fully incorporates the dynamic 
  positions given the published ranking methodologies.
 
 
-## Define Utility Function
-We use these functions to clean up html tags and get html tables.
+-----
 
+## Contributions
 
-```python
-import json
-import requests
-import urllib
-from datetime import datetime
-from html.parser import HTMLParser
-from io import StringIO
+Contributions are very welcome. Interested contributors can consult our
+[contribution
+guidelines](https://github.com/benkeser/survtmle/blob/master/CONTRIBUTING.md)
+prior to submitting a pull request.
 
-import numpy as np
-import pandas as pd
-from IPython.display import display  # used to print out pretty pandas dataframes
-from bs4 import BeautifulSoup
-from tqdm import tqdm
-%matplotlib inline
+-----
 
+## Citation
 
-def tableDataText(table):
-    """Parses a html segment started with tag <table> followed
-    by multiple <tr> (table rows) and inner <td> (table data) tags.
-    It returns a list of rows with inner columns.
-    Accepts only one <th> (table header/data) in the first row.
-    """
-    def rowgetDataText(tr, coltag='td'): # td (data) or th (header)
-        return [td.get_text(strip=True) for td in tr.find_all(coltag)]
-    rows = []
-    trs = table.find_all('tr')
-    headerow = rowgetDataText(trs[0], 'th')
-    if headerow: # if there is a header row include first
-        rows.append(headerow)
-        trs = trs[1:]
-    for tr in trs: # for every table row
-        rows.append(rowgetDataText(tr, 'td') ) # data row
-    return rows
+After using the `survtmle` R package, please cite both of the following:
 
-class MLStripper(HTMLParser):
-    def __init__(self):
-        super().__init__()
-        self.reset()
-        self.strict = False
-        self.convert_charrefs= True
-        self.text = StringIO()
-    def handle_data(self, d):
-        self.text.write(d)
-    def get_data(self):
-        return self.text.getvalue()
+``` 
+    @manual{benkeser2017survtmle,
+      author = {Benkeser, David C and Hejazi, Nima S},
+      title = {{survtmle}: Targeted Minimum Loss-Based Estimation for
+               Survival Analysis in {R}},
+      year  = {2017},
+      howpublished = {\url{https://github.com/benkeser/survtmle}},
+      url = {http://dx.doi.org/10.5281/zenodo.835868},
+      doi = {10.5281/zenodo.835868}
+    }
 
-def strip_tags(html):
-    try:
-        s = MLStripper()
-        s.feed(html)
-        return s.get_data()
-    except:
-        return ''
+    @article{benkeser2017improved,
+      author = {Benkeser, David C and Carone, Marco and Gilbert, Peter B},
+      title = {Improved estimation of the cumulative incidence of rare
+               outcomes},
+      journal = {Statistics in Medicine},
+      publisher = {Wiley-Blackwell},
+      year  = {2017},
+      doi = {10.1002/sim.7337}
+    }
 ```
 
+-----
 
-```python
-#Load indicator weightings
-weightings = np.load('weightings.npy', allow_pickle=True).tolist()
-print('\n === Times Higher Education Subjects (Top 5)  ===')
-display(weightings['subject_times'].head(5))
-```
+## License
 
+© 2016-2019 [David C. Benkeser](http://www.benkeserstatistics.com)
+
+The contents of this repository are distributed under the MIT license.
+See below for details:
+
+    The MIT License (MIT)
     
-     === Times Higher Education Subjects ===
+    Copyright (c) 2016-2019 David C. Benkeser
+    
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+    
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+    
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+## Prerequisites
+Please check the Jupyter notebook in this depository for weighting data listed below 
+and required packages. 
 
 
+=== Times Higher Education Subjects ===
 
 <div>
 <style scoped>
@@ -505,8 +508,8 @@ display(weightings['weightings_qs'].head(5))
 </table>
 </div>
 
-
-# Times Higher Education
+# Examples
+## Times Higher Education
 
 The AJAX logic of [Times Higher Education](http://timeshighereducation.com) is simple and consistent across both the world university ranking and subject
 rankings. The current logic works for data ranging from 2011 to 2021. Apply the indicator weighting according to
