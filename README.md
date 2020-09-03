@@ -23,10 +23,10 @@ After using code snippets in this notebook, please cite the following:
     title        = {{A python based AJAX university ranking tracker}},
     month        = Sep,
     year         = 2020,
-    doi          = { },
+    doi          = {10.5281/zenodo.4013120},
     version      = {1.0},
     publisher    = {Zenodo},
-    url          = {}
+    url          = {https://zenodo.org/badge/latestdoi/292465568}
     }
 ```
 
