@@ -13,38 +13,20 @@ systems: Times Higher Education, ARWU and QS. It fully incorporates the dynamic 
 
 -----
 
-## Contributions
-
-Contributions are very welcome. Interested contributors can consult our
-[contribution
-guidelines](https://github.com/benkeser/survtmle/blob/master/CONTRIBUTING.md)
-prior to submitting a pull request.
-
------
-
 ## Citation
 
-After using the `survtmle` R package, please cite both of the following:
+After using code snippets in this notebook, please cite the following:
 
 ``` 
-    @manual{benkeser2017survtmle,
-      author = {Benkeser, David C and Hejazi, Nima S},
-      title = {{survtmle}: Targeted Minimum Loss-Based Estimation for
-               Survival Analysis in {R}},
-      year  = {2017},
-      howpublished = {\url{https://github.com/benkeser/survtmle}},
-      url = {http://dx.doi.org/10.5281/zenodo.835868},
-      doi = {10.5281/zenodo.835868}
-    }
-
-    @article{benkeser2017improved,
-      author = {Benkeser, David C and Carone, Marco and Gilbert, Peter B},
-      title = {Improved estimation of the cumulative incidence of rare
-               outcomes},
-      journal = {Statistics in Medicine},
-      publisher = {Wiley-Blackwell},
-      year  = {2017},
-      doi = {10.1002/sim.7337}
+    @misc{urtracker,
+    author       = {Jie Zhu},
+    title        = {{A python based AJAX university ranking tracker}},
+    month        = Sep,
+    year         = 2020,
+    doi          = { },
+    version      = {1.0},
+    publisher    = {Zenodo},
+    url          = {}
     }
 ```
 
