@@ -160,11 +160,6 @@ and required packages.
 
 
 
-```python
-print('\n === Times Higher Education Weightings (Top 5) ===')
-display(weightings['weightings_times'].head(5))
-```
-
     
      === Times Higher Education Weightings (Top 5) ===
 
@@ -505,92 +500,7 @@ The AJAX logic of [Times Higher Education](http://timeshighereducation.com) is s
 rankings. The current logic works for data ranging from 2011 to 2021. Apply the indicator weighting according to
 [Times Higher Education Methodology](https://www.timeshighereducation.com/world-university-rankings/world-university-rankings-2020-methodology)
 
-
 ```python
-#Define times scraping function
-def fetch_TIMES(rank=None, year=None, weightings=weightings['weightings_times'],page =weightings['subject_times'] ):
-        if 'Subject' in rank:
-            page = page[page.Subject == rank].Page.reset_index(drop=True)[0]
-            url1 = "https://www.timeshighereducation.com/world-university-rankings/" + str(
-                year) + "/subject-ranking/" + page
-        else:
-            url1 = "https://www.timeshighereducation.com/world-university-rankings/" + str(year) + "/world-ranking"
-        r = requests.get(url1, headers={'User-Agent': 'Mozilla/5.0'})
-        soup = BeautifulSoup(r.content, "lxml")
-        scripts = soup.find_all('script')
-        for script in scripts:
-            try:
-                if 'jQuery.extend' in script.contents[0]:
-                    jsonStr = script.contents[0].split('jQuery.extend(Drupal.settings,')[1]
-                    jsonStr = jsonStr.rsplit(');', 1)[0]
-                    jsonObj = json.loads(jsonStr)
-                    url1 = jsonObj['the_data_rankings']['#datatable-1']['ajax']['url']
-            except:
-                pass
-
-        req = urllib.request.Request(url1, headers={'User-Agent': 'Mozilla/5.0'})
-        with urllib.request.urlopen(req) as url:
-            data = json.loads(url.read().decode())
-        df = pd.DataFrame(data['data'])
-        try:
-            df = df[['rank', 'name', 'scores_overall',
-                     'scores_teaching', 'scores_research', 'scores_citations',
-                     'scores_industry_income', 'scores_international_outlook',
-                     'location', 'stats_number_students', 'stats_student_staff_ratio',
-                     'stats_pc_intl_students', 'stats_female_male_ratio']]
-            df.columns = ['Rank', 'University', 'TotalScore',
-                          'Teaching', 'Research', 'Citation',
-                          'Industry Income', 'International Outlook',
-                          'Country', 'Student Count', 'Faculty/Student',
-                          'International Student%', 'Female/Male']
-        except:
-            df = df[['rank', 'name', 'scores_overall',
-                     'scores_teaching', 'scores_research', 'scores_citations',
-                     'scores_industry_income', 'scores_international_outlook',
-                     'location']]
-            df.columns = ['Rank', 'University', 'TotalScore',
-                          'Teaching', 'Research', 'Citation',
-                          'Industry Income', 'International Outlook',
-                          'Country']
-
-        weightings = weightings[weightings.Subjects == rank].reset_index(drop=True)
-
-        df = df.replace('-', 0, regex=True)
-
-        df[['Teaching', 'Research', 'Citation', 'Industry Income', 'International Outlook']] = \
-            df[['Teaching', 'Research', 'Citation', 'Industry Income', 'International Outlook']].astype('float32')
-
-        df['Calculated Score'] = np.sum(
-            np.multiply(df[['Teaching', 'Research', 'Citation', 'Industry Income', 'International Outlook']],
-                        weightings[['Teaching', 'Research', 'Citation', 'Industry Income', 'International Outlook']]),
-            1)
-
-        df['Calculated Rank'] = df['Calculated Score'].rank(method='min', ascending=False)
-        df['Subject'] = rank.replace('.', ' ')
-        try:
-            df['Subject'] = df['Subject'].str.replace('Subject', '')
-        except:
-            pass
-
-        df['National Rank'] = df.groupby('Country')['Calculated Score'].rank(method='min', ascending=False)
-        df['Top 100'] = df['Calculated Rank'] <= 100
-        df['Year'] = year
-
-        return df
-
-def TIMES_rank(years=[2021], ranks=['World.University.Rankings','Classics.Ancient.History']):
-
-    df_TIMES = pd.DataFrame()
-    for year in tqdm(years):
-        for rank in ranks:
-            try:
-                df_TIMES = pd.concat([df_TIMES,fetch_TIMES(rank=rank, year=year)], axis=0, ignore_index=True)
-            except:
-                print(year,rank)
-    df_TIMES['Schema'] = 'TIMES'
-
-    return df_TIMES
-
 years = [2021]
 ranks = ['World.University.Rankings']
 df_TIMES = TIMES_rank(years, ranks)
@@ -602,7 +512,7 @@ display(df_TIMES.head(5))
 
 
     
-     === Times Higher Education ===
+=== Times Higher Education ===
 
 
 
@@ -954,122 +864,8 @@ Please refer to the [methodology](http://www.shanghairanking.com/ARWU-Methodolog
 
 
 ```python
-#Define ARWU subject and worling rank scraping function
-def fetch_ARWU_subject(ARWU_subject, subject= "Mathematics", year = "current"):
-    """Scrape ARWU Subject Page
-    """
-    if (year == "current"):
-        url1 = "http://www.shanghairanking.com/Shanghairanking-Subject-Rankings/"
-    else:
-        url1 = "http://www.shanghairanking.com/Shanghairanking-Subject"+ "-Rankings-"+ str(year)+"/"
-    subject_page = ARWU_subject[ARWU_subject.Subject==subject].Page.reset_index(drop=True)[0]
-    url_subject = url1+subject_page
-    r = requests.get(url_subject)
-    soup = BeautifulSoup(r.content, "html.parser")
-    table = soup.find(lambda tag: tag.name == 'table' and tag.has_attr('id') and tag['id'] == "UniversityRanking")
-    list_table = tableDataText(table)
-    df = pd.DataFrame(list_table[1:])
-    if  year == "current":
-        df = df.drop(columns = 3)
-    df.columns = ["Rank", "University", "Country", "TotalScore", "PUB",
-                        "CNCI", "IC", "TOP", "AWARD"]
-    # Retrieve countries
-    countries = soup.find(lambda tag: tag.name == 'table' and tag.has_attr('id') and tag['id'] == "UniversityRanking")
-    countries = [td['title'] for td in countries.find_all('img')]
-    df.Country = countries
-
-    weightings = pd.read_csv('arwuweighting.csv')
-    weightings = weightings[weightings.Ranktype==subject].reset_index(drop=True)
-    df = df.replace('NA', 0, regex=True)
-    df[["PUB", "CNCI", "IC", "TOP", "AWARD"]] =  df[["PUB","CNCI", "IC", "TOP", "AWARD"]].astype('float32')
-    df['Calculated Score'] = np.sum(np.multiply(df[["PUB","CNCI", "IC", "TOP", "AWARD"]],
-                             weightings[["PUB",  "Normalized Citation",  "IC",  "Number Top10",  "Award"]]/100),1)
-
-    df['Calculated Rank'] = df['Calculated Score'].rank(method ='min',ascending = False)
-    df['Subject'] = subject
-    df['National Rank'] = df.groupby('Country')['Calculated Score'].rank(method ='min',ascending = False)
-    df['Top 100'] = df['Calculated Rank'] <= 100
-    if year == "current":
-        df['Year'] = datetime.now().date().year
-    else:
-        df['Year'] = year
-    return df
-
-def fetch_ARWU(year = None):
-    """Scrape ARWU World University Ranking Page
-    """
-    url1 = "http://www.shanghairanking.com/ARWU"+ str(year) + ".html"
-
-    r = requests.get(url1)
-    soup = BeautifulSoup(r.content, "html.parser")
-    table = soup.find(lambda tag: tag.name == 'table' and tag.has_attr('id') and tag['id'] == "UniversityRanking")
-    list_table = tableDataText(table)
-    df = pd.DataFrame(list_table[1:])
-    df.columns = ["Rank", "University", "Country", "National Rank",
-		"TotalScore", "Alumni", "Award", "HiCi", "N&S", "PUB",
-		"PCP"]
-    # Retrieve countries
-    countries = soup.find(lambda tag: tag.name == 'table' and tag.has_attr('id') and tag['id'] == "UniversityRanking")
-    countries = [td['src'] for td in countries.find_all('img')]
-    df.Country = countries
-    df.Country  = df.Country.str.replace('image/flag/','')
-    df.Country  = df.Country.str.replace('.png','')
-
-
-    df = df.replace('NA', 0, regex=True)
-    df = df.replace('', -0.01, regex=True)
-    df[[ "Alumni", "Award", "HiCi", "N&S", "PUB","PCP"]] =  df[[ "Alumni", "Award", "HiCi", "N&S", "PUB","PCP"]].astype('float32')
-
-    df['Calculated Score'] = 1
-    df['Calculated Score'][df["N&S"] == -0.01] = np.sum(np.multiply(df[df["N&S"] == -0.01][["Alumni", "Award", "HiCi", "PUB","PCP"]],[0.1, 0.2, 0.2, 0.2, 0.1]),1)*1.25
-    df['Calculated Score'][df["N&S"] != -0.01] = np.sum(np.multiply(df[df["N&S"] != -0.01][["Alumni", "Award", "HiCi","N&S", "PUB","PCP"]],[0.1, 0.2, 0.2, 0.2,0.2, 0.1]),1)
-    df['Calculated Score'] = df['Calculated Score'] * 100/np.max(df['Calculated Score'])
-
-    df['Calculated Rank'] = df['Calculated Score'].rank(method ='min',ascending = False)
-    df['Subject'] = 'World'
-    df['National Rank'] = df.groupby('Country')['Calculated Score'].rank(method ='min',ascending = False)
-    df['Top 100'] = df['Calculated Rank'] <= 100
-    df['Year'] = year
-
-    return df
-
-def ARWU_rank(years=[2020], first_x_subjects = 2):
-   '''first_x_subjects: get results for the first n subjects in ARWU subject list'''
-   df_ARWU =  pd.DataFrame()
-   for year in tqdm(years):
-       try:
-           df_ARWU = df_ARWU.append(fetch_ARWU(year = year))
-       except:
-           pass
-
-   df_ARWU['Schema'] = 'ARWU'
-
-   ARWU_subject =  weightings['subject_arwu']
-   df_ARWU_subject = pd.DataFrame()
-   for year in years:
-       if year == datetime.now().year:
-           year = "current"
-       for subject in tqdm(ARWU_subject.Subject[0:first_x_subjects]):
-           try:
-               df_ARWU_subject = df_ARWU_subject.append(fetch_ARWU_subject(ARWU_subject, subject= subject, year = year))
-           except:
-               pass
-
-   df_ARWU_subject['Schema'] = 'ARWU'
-   df_ARWU_subject.columns = ['Rank', 'University', 'Country', 'TotalScore', 'PUB', 'CNCI', 'IC',
-           'TOP', 'Award', 'Calculated Score', 'Calculated Rank', 'Subject',
-           'National Rank', 'Top 100', 'Year', 'Schema']
-
-
-   return df_ARWU, df_ARWU_subject
-```
-
-
-```python
 df_ARWU, df_ARWU_subject = ARWU_rank(years=[2020])
-
 print('\n === ARWU ===')
-display(df_ARWU.head(5))
 ```
 
       0%|          | 0/1 [00:00<?, ?it/s]/Users/jiezhu/.virtualenvs/globalenv/lib/python3.7/site-packages/ipykernel_launcher.py:68: SettingWithCopyWarning: 
@@ -1714,133 +1510,6 @@ extract data for both world and subject rankings. The weightings for the calcula
 
 
 ```python
-#Define QS subject and world rank scraping function
-
-def fetch_QS(rank= None, year = None, weightings = weightings['weightings_qs']):
-    """Scrape QS Subject Page
-    """
-    with requests.Session() as session:
-        if "world" in rank:
-            url = "https://www.topuniversities.com/university-rankings/world-university-rankings/"+ str(year)
-        else:
-            url = "https://www.topuniversities.com/university-rankings/university-subject-rankings/"+ str(year) +"/"+ rank
-
-        session.get(url)
-        r = session.post(url,headers={"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-                                  'X-Requested-With': 'XMLHttpRequest'})
-        soup = BeautifulSoup(r.content, "lxml")
-        scripts = soup.find_all('script')
-        for script in scripts:
-            try:
-                if "jQuery.extend" in script.contents[0] :
-                    jsonStr = script.contents[0].split('jQuery.extend(Drupal.settings,')[1]
-                    jsonStr = jsonStr.rsplit(');', 1)[0]
-                    jsonObj = json.loads(jsonStr)
-                    url2 = jsonObj['qs_rankings_datatables']['rank_indicators_url']
-            except:
-                pass
-
-    req2 = urllib.request.Request(url2, headers={'User-Agent': 'Mozilla/5.0'})
-    with urllib.request.urlopen(req2) as url:
-        indicator_data = json.loads(url.read().decode())
-
-    columns  = pd.DataFrame(indicator_data['columns'])
-    rank_data =  pd.DataFrame(indicator_data['data'])
-
-    for index,row in rank_data.iterrows():
-        rank_data.iloc[index] = [strip_tags(item) for item in row]
-    if "world" in rank:
-        rank_data.columns = ['region', 'Country', 'Rank', 'overall_rank_dis', 'University',
-           'TotalScore', 'stars', 'Academic', '3791742_rank_d', '3791742_rank',
-           'Employer', '3791741_rank_d', '3791741_rank', 'Faculty Student',
-           '3791740_rank_d', '3791740_rank', 'Citation', '3791737_rank_d',
-           '3791737_rank', 'International Faculty', '3791739_rank_d', '3791739_rank', 'International Student',
-           '3791738_rank_d', '3791738_rank', '', '_rank_d', '_rank']
-        rank_data = rank_data[['Country', 'Rank',  'University', 'TotalScore',  'Academic',  'Employer','Faculty Student',
-        'Citation', 'International Faculty', 'International Student']]
-    else:
-        try:
-            rank_data.columns = ['region', 'Country', 'Rank', 'overall_rank_dis', 'University',
-                                 'TotalScore', 'stars', 'Academic', '4280115_rank_d', '4280115_rank',
-                                 'Employer', '4280112_rank_d', '4280112_rank', 'h-index',
-                                 '4280113_rank_d', '4280113_rank', 'Citation', '4280114_rank_d',
-                                 '4280114_rank']
-        except:
-            if rank == 'performing-arts':
-                rank_data.columns = ['region', 'Country', 'Rank', 'overall_rank_dis', 'University',
-                                     'TotalScore', 'stars', 'Academic', '4280115_rank_d', '4280115_rank',
-                                     'Employer', '4280112_rank_d', '4280112_rank']
-                rank_data['h-index'] = 0
-                rank_data['Citation'] = 0
-            elif rank == 'classics-ancient-history':
-                rank_data.columns = ['region', 'Country', 'Rank', 'overall_rank_dis', 'University',
-                                     'TotalScore', 'stars', 'Academic', '4280115_rank_d', '4280115_rank',
-                                     'Employer', '4280112_rank_d', '4280112_rank']
-                rank_data['h-index'] = 0
-                rank_data['Citation'] = 0
-            elif rank == 'english-language-literature':
-                rank_data.columns = ['region', 'Country', 'Rank', 'overall_rank_dis', 'University',
-                                     'TotalScore', 'stars', 'Academic', '4280115_rank_d', '4280115_rank',
-                                     'Employer', '4280112_rank_d', '4280112_rank', 'Citation', '4280114_rank_d',
-                                     '4280114_rank']
-                rank_data['h-index'] = 0
-            elif rank == 'hospitality':
-                rank_data.columns = ['region', 'Country', 'Rank', 'overall_rank_dis', 'University',
-                                     'TotalScore', 'stars', 'Academic', '4280115_rank_d', '4280115_rank',
-                                     'Employer', '4280112_rank_d', '4280112_rank', 'Citation', '4280114_rank_d',
-                                     '4280114_rank']
-                rank_data['h-index'] = 0
-            else:
-                pass
-
-        rank_data = rank_data[['Country', 'Rank', 'University', 'TotalScore', 'Academic', 'Employer', 'h-index', 'Citation']]
-
-    weightings.Subject = weightings.Subject.str.lower()
-    weightings.Subject = weightings.Subject.str.replace('.','-')
-    weightings = weightings[weightings.Subject==rank].reset_index(drop=True)
-    df = rank_data.copy()
-
-    df = df.replace('', 0, regex=True)
-
-    if "world" in rank:
-        df[[ 'Academic',  'Employer','Faculty Student',
-        'Citation', 'International Faculty', 'International Student']] = \
-            df[[ 'Academic',  'Employer','Faculty Student',
-        'Citation', 'International Faculty', 'International Student']].astype('float32')
-
-        df['Calculated Score'] = np.sum(np.multiply(df[['Academic',  'Employer','Faculty Student', 'Citation', 'International Faculty', 'International Student']],
-                                 weightings[['Academic',  'Employer','Faculty Student', 'Citation', 'International Faculty', 'International Student']]),1)
-        df['Calculated Score'] = 100 / np.max(df['Calculated Score']) * df['Calculated Score']
-    else:
-        df[['Academic', 'Employer', 'h-index', 'Citation']] =  df[['Academic', 'Employer', 'h-index', 'Citation']].astype('float32')
-        df['Calculated Score'] = np.sum(np.multiply(df[['Academic', 'Employer', 'h-index', 'Citation']],
-                                                    weightings[['Academic', 'Employer', 'h-index', 'Citation']]), 1)
-
-
-    df['Calculated Rank'] = df['Calculated Score'].rank(method ='min',ascending = False)
-    df['Subject'] =  rank.replace('.',' ')
-
-    df['National Rank'] = df.groupby('Country')['Calculated Score'].rank(method ='min',ascending = False)
-    df['Top 100'] = df['Calculated Rank'] <= 100
-    df['Year'] = year-1
-
-    return df
-
-def QS_rank(years=None, ranks=None):
-
-    df_QS = pd.DataFrame()
-    for year in tqdm(years):
-        for rank in ranks:
-            try:
-                df_QS = df_QS.append(fetch_QS(rank=rank, year=year))
-            except:
-                print(year, rank)
-    df_QS['Schema'] = 'QS'
-    return df_QS
-```
-
-
-```python
 years = [2020]
 df_QS = QS_rank(years = years, ranks = ranks)
 ranks=['world-university-rankings','classics-ancient-history']
@@ -1850,15 +1519,9 @@ ranks=['world-university-rankings','classics-ancient-history']
     100%|██████████| 1/1 [00:10<00:00, 10.13s/it]
 
 
-
 ```python
-print('\n === QS World and Subject Rankings ===')
 display(df_QS[df_QS.Subject== 'world-university-rankings'].head(5))
-
 display(df_QS[df_QS.Subject== 'classics-ancient-history'].head(5))
-
-
-
 ```
 
     
