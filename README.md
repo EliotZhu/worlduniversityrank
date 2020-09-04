@@ -19,56 +19,7 @@ systems: Times Higher Education, ARWU and QS. It fully incorporates the dynamic 
  positions given the published ranking methodologies.
 
 
------
-
-## Citation
-
-After using code snippets in this notebook, please cite the following:
-
-``` 
-    @misc{urtracker,
-    author       = {Jie Zhu},
-    title        = {{A python based AJAX university ranking tracker}},
-    month        = Sep,
-    year         = 2020,
-    doi          = {10.5281/zenodo.4013120},
-    version      = {1.0},
-    publisher    = {Zenodo},
-    url          = {https://zenodo.org/badge/latestdoi/292465568}
-    }
-```
-
------
-
-## License
-
-© 2017-2020 [Elliott J Zhu](https://scholar.google.com/citations?user=Cw5v2f4AAAAJ&hl=en)
-
-The contents of this repository are distributed under the MIT license.
-See below for details:
-
-    The MIT License (MIT)
-    
-    Copyright (c) 2017-2020 Elliott Jie Zhu
-    
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-    
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
-    
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
-
+----
 ## Prerequisites
 Please check the Jupyter notebook in this depository for weighting data listed below 
 and required packages. 
@@ -1664,3 +1615,52 @@ display(df_QS[df_QS.Subject== 'classics-ancient-history'].head(5))
 </table>
 </div>
 
+-----
+
+## Citation
+
+After using code snippets in this notebook, please cite the following:
+
+``` 
+    @misc{urtracker,
+    author       = {Jie Zhu},
+    title        = {{A python based AJAX university ranking tracker}},
+    month        = Sep,
+    year         = 2020,
+    doi          = {10.5281/zenodo.4013120},
+    version      = {1.0},
+    publisher    = {Zenodo},
+    url          = {https://zenodo.org/badge/latestdoi/292465568}
+    }
+```
+
+-----
+
+## License
+
+© 2017-2020 [Elliott J Zhu](https://scholar.google.com/citations?user=Cw5v2f4AAAAJ&hl=en)
+
+The contents of this repository are distributed under the MIT license.
+See below for details:
+
+    The MIT License (MIT)
+    
+    Copyright (c) 2017-2020 Elliott Jie Zhu
+    
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+    
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+    
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
